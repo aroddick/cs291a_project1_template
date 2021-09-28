@@ -7,7 +7,11 @@ require 'pp'
 def main(event:, context:)
   # You shouldn't need to use context, but its fields are explained here:
   # https://docs.aws.amazon.com/lambda/latest/dg/ruby-context.html
-  response(body: event, status: 200)
+  if event['httpMethod'] == 'POST'
+    response(body: event, status: 200)
+  else
+    response(body: event, status: 400)
+  end
 end
 
 def response(body: nil, status: 200)
