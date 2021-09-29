@@ -11,7 +11,7 @@ def main(event:, context:)
     if event['path'] == '/'
         if event['httpMethod'] != 'GET'
             return response(body: event, status: 405)
-        elsif !(headers.keys.include? 'Authorization' && headers['Authorization'].include? 'Bearer ')
+        elsif !(headers.keys.include?('Authorization') && headers['Authorization'].include?('Bearer '))
             return response(body: event, status: 403)
         end
         token = headers['Authorization'].split('Bearer ').first
