@@ -14,8 +14,8 @@ def main(event:, context:)
         elsif !(headers.keys.include?('Authorization') && headers['Authorization'].include?('Bearer '))
             return response(body: event, status: 403)
         end
-        token = headers['Authorization'].split('Bearer ').first
-        decodedToken = JWT.decode token, ENV['JWT_SECRET'], 'HS256'
+        token = headers['Authorization'].split('Bearer ')[1]
+        decodedToken = JWT.decode(token, ENV['JWT_SECRET'])[0]
         exp = decodedToken['exp']
         nbf = decodedToken['nbf']
         if Time.now.to_i > exp || Time.now.to_i < nbf
