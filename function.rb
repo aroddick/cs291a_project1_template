@@ -7,11 +7,39 @@ require 'pp'
 def main(event:, context:)
   # You shouldn't need to use context, but its fields are explained here:
   # https://docs.aws.amazon.com/lambda/latest/dg/ruby-context.html
-  if event['httpMethod'] == 'POST'
-    response(body: event, status: 200)
-  else
-    response(body: event, status: 400)
-  end
+    headers = JSON.parse(event['headers'])
+    if event['path'] == '/'
+        if event['httpMethod'] != 'GET'
+            return response(body: event, status: 405)
+        elsif !(headers.keys.include? 'Authorization' && headers['Authorization'].include? 'Bearer ')
+            return response(body: event, status: 403)
+        end
+        token = headers['Authorization'].split('Bearer ').first
+        decodedToken = JWT.decode token, ENV['JWT_SECRET'], 'HS256'
+        exp = decodedToken['exp']
+        nbf = decodedToken['nbf']
+        if Time.now.to_i > exp || Time.now.to_i < nbf
+            return response(body: event, status: 401)
+        end
+        data = decodedToken['data']
+        return response(body: data, status: 200)
+
+    elsif event['path'] == '/token'
+        if event['httpMethod'] != 'POST'
+            return response(body: event, status: 405)
+        end
+        payload = {
+            data: event['body'],
+            exp: Time.now.to_i + 5,
+            nbf: Time.now.to_i + 2
+        }
+        token = JWT.encode payload, ENV['JWT_SECRET'], 'HS256'
+        body = {'token' => token}
+        response(body: body, status: 201)
+    else
+        response(body: event, status: 404)
+    end
+
 end
 
 def response(body: nil, status: 200)
