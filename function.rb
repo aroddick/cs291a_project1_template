@@ -7,7 +7,7 @@ require 'pp'
 def main(event:, context:)
   # You shouldn't need to use context, but its fields are explained here:
   # https://docs.aws.amazon.com/lambda/latest/dg/ruby-context.html
-    headers = JSON.parse(event['headers'])
+    headers = event['headers']
     if event['path'] == '/'
         if event['httpMethod'] != 'GET'
             return response(body: event, status: 405)
