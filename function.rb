@@ -14,7 +14,7 @@ def main(event:, context:)
         elsif !(headers.keys.any?{ |s| s.casecmp?('authorization') && headers[s].include?('Bearer ')})
             return response(body: event, status: 403)
         end
-        token = findToken(headers)
+        token = findToken(headers: headers)
 
         begin
             decodedToken = JWT.decode(token, ENV['JWT_SECRET'])[0]
