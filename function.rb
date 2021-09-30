@@ -11,15 +11,12 @@ def main(event:, context:)
     if event['path'] == '/'
         if event['httpMethod'] != 'GET'
             return response(body: event, status: 405)
-        elsif !(headers.keys.any?{ |s| s.casecmp('authorization') == 0 && headers[s].include?('Bearer ')})
+        elsif !(headers.keys.any?{ |s| s.casecmp?('authorization') && headers[s].include?('Bearer ')})
             return response(body: event, status: 403)
         end
         headers.keys.each { |s| 
-            if s.casecmp('authorization') == 0
+            if s.casecmp?('authorization')
                 token = headers[s].split('Bearer ')[1]
-            else
-                PP.pp "Should not happen"
-                return response(body: event, status: 403)
             end
         }
         begin
