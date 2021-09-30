@@ -42,13 +42,13 @@ def main(event:, context:)
             return response(body: event, status: 422)
         end
         payload = {
-            data: JSON.generate(event['body']),
+            data: event['body'],
             exp: Time.now.to_i + 5,
             nbf: Time.now.to_i + 2
         }
         token = JWT.encode payload, ENV['JWT_SECRET'], 'HS256'
         body = {'token' => token}
-        response(body: body, status: 201)
+        response(body: JSON.generate(body), status: 201)
     else
         response(body: event, status: 404)
     end
