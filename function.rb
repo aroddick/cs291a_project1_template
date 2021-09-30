@@ -17,8 +17,10 @@ def main(event:, context:)
         token = headers['Authorization'].split('Bearer ')[1] 
         begin
             decodedToken = JWT.decode(token, ENV['JWT_SECRET'])[0]
-        rescue => exception
+        rescue => JWT::ExpiredSignature, JWT::ImmatureSignature
             return response(body: event, status: 401)
+        rescue => exception
+            return response(body: event, status: 403)
         end
         exp = decodedToken['exp']
         nbf = decodedToken['nbf']
