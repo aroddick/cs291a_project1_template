@@ -14,13 +14,17 @@ def main(event:, context:)
         elsif !(headers.keys.include?('Authorization') && headers['Authorization'].include?('Bearer '))
             return response(body: event, status: 403)
         end
-        token = headers['Authorization'].split('Bearer ')[1]
-        decodedToken = JWT.decode(token, ENV['JWT_SECRET'])[0]
-        exp = decodedToken['exp']
-        nbf = decodedToken['nbf']
-        if Time.now.to_i > exp || Time.now.to_i < nbf
+        token = headers['Authorization'].split('Bearer ')[1] 
+        begin
+            decodedToken = JWT.decode(token, ENV['JWT_SECRET'])[0]
+        rescue => exception
             return response(body: event, status: 401)
         end
+        exp = decodedToken['exp']
+        nbf = decodedToken['nbf']
+        # if Time.now.to_i > exp || Time.now.to_i < nbf
+        #     return response(body: event, status: 401)
+        # end
         data = decodedToken['data']
         return response(body: data, status: 200)
 
