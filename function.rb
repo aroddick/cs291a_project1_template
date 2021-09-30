@@ -28,7 +28,7 @@ def main(event:, context:)
         #     return response(body: event, status: 401)
         # end
         data = decodedToken['data']
-        return response(body: JSON.generate(data), status: 200)
+        return response(body: data, status: 200)
 
     elsif event['path'] == '/token'
         if event['httpMethod'] != 'POST'
@@ -48,7 +48,7 @@ def main(event:, context:)
         }
         token = JWT.encode payload, ENV['JWT_SECRET'], 'HS256'
         body = {'token' => token}
-        response(body: JSON.generate(body), status: 201)
+        response(body: body, status: 201)
     else
         response(body: event, status: 404)
     end
