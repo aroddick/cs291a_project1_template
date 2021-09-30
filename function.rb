@@ -11,7 +11,7 @@ def main(event:, context:)
     if event['path'] == '/'
         if event['httpMethod'] != 'GET'
             return response(body: event, status: 405)
-        elsif !(headers.keys.include?('Authorization') && headers['Authorization'].include?('Bearer '))
+        elsif !(headers.keys.any?{ |s| s.casecmp('authorization')} && headers['Authorization'].include?('Bearer '))
             return response(body: event, status: 403)
         end
         token = headers['Authorization'].split('Bearer ')[1] 
@@ -33,7 +33,7 @@ def main(event:, context:)
     elsif event['path'] == '/token'
         if event['httpMethod'] != 'POST'
             return response(body: event, status: 405)
-        elsif !(headers.keys.include?('Content-Type') && headers['Content-Type'] == 'application/json')
+        elsif !(headers.keys.any?{ |s| s.casecmp('content-type')} && headers['Content-Type'] == 'application/json')
             return response(body: event, status: 415)
         end
         begin
