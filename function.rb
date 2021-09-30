@@ -32,10 +32,16 @@ def main(event:, context:)
 
     elsif event['path'] == '/token'
         if event['httpMethod'] != 'POST'
-            return response(body: JSON.generate(event), status: 405)
+            return response(body: event, status: 405)
+        elsif !(headers.keys.include?('Content-Type') && headers['Content-Type'] == 'application/json')
+            return response(body: event, status: 415)
         end
+        begin
+            body = JSON.parse(event['body'])
+        rescue
+            return response(body: event, status: 422)
         payload = {
-            data: event['body'],
+            data: JSON.generate(event['body']),
             exp: Time.now.to_i + 5,
             nbf: Time.now.to_i + 2
         }
