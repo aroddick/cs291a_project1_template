@@ -67,6 +67,7 @@ def findToken(headers:)
     }
     PP.pp "Should not happen"
     return "Blah"
+end
 
 def response(body: nil, status: 200)
   {
