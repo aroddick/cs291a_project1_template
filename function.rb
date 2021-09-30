@@ -28,11 +28,11 @@ def main(event:, context:)
         #     return response(body: event, status: 401)
         # end
         data = decodedToken['data']
-        return response(body: data, status: 200)
+        return response(body: JSON.generate(data), status: 200)
 
     elsif event['path'] == '/token'
         if event['httpMethod'] != 'POST'
-            return response(body: event, status: 405)
+            return response(body: JSON.generate(event), status: 405)
         end
         payload = {
             data: event['body'],
