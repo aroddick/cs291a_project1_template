@@ -20,10 +20,10 @@ def main(event:, context:)
         rescue JWT::ExpiredSignature, JWT::ImmatureSignature => exception
             PP.pp exception
             return response(body: event, status: 401)
-        rescue => exception
-            PP.pp exception
-            PP.pp 403
-            return response(body: event, status: 403)
+        # rescue => exception
+        #     PP.pp exception
+        #     PP.pp 403
+        #     return response(body: event, status: 403)
         end
         exp = decodedToken['exp']
         nbf = decodedToken['nbf']
