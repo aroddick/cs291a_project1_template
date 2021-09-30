@@ -11,7 +11,7 @@ def main(event:, context:)
     if event['path'] == '/'
         if event['httpMethod'] != 'GET'
             return response(body: event, status: 405)
-        elsif !(headers.keys.any?{ |s| s.casecmp?('authorization') && headers[s].include?('Bearer ')})
+        elsif !(headers.keys.any?{ |s| s.casecmp?('authorization') && headers[s].slice(0,7) == "Bearer "})
             return response(body: event, status: 403)
         end
         token = findToken(headers: headers)
