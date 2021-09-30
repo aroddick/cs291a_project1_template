@@ -40,6 +40,7 @@ def main(event:, context:)
             body = JSON.parse(event['body'])
         rescue
             return response(body: event, status: 422)
+        end
         payload = {
             data: JSON.generate(event['body']),
             exp: Time.now.to_i + 5,
