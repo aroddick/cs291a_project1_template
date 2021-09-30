@@ -14,11 +14,8 @@ def main(event:, context:)
         elsif !(headers.keys.any?{ |s| s.casecmp?('authorization') && headers[s].include?('Bearer ')})
             return response(body: event, status: 403)
         end
-        headers.keys.each { |s| 
-            if s.casecmp?('authorization')
-                token = headers[s].split('Bearer ')[1]
-            end
-        }
+        token = findToken(headers)
+
         begin
             decodedToken = JWT.decode(token, ENV['JWT_SECRET'])[0]
         rescue JWT::ExpiredSignature, JWT::ImmatureSignature => exception
@@ -61,6 +58,15 @@ def main(event:, context:)
     end
 
 end
+
+def findToken(headers:)
+    headers.keys.each { |s| 
+        if s.casecmp?('authorization')
+            return headers[s].split('Bearer ')[1]
+        end
+    }
+    PP.pp "Should not happen"
+    return "Blah"
 
 def response(body: nil, status: 200)
   {
