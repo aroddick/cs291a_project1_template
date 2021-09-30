@@ -14,7 +14,7 @@ def main(event:, context:)
         elsif !(headers.keys.any?{ |s| s.casecmp('authorization') == 0 && headers[s].include?('Bearer ')})
             return response(body: event, status: 403)
         end
-        headers.each { |s| 
+        headers.keys.each { |s| 
             if s.casecmp('authorization') == 0
                 token = headers[s].split('Bearer ')[1]
             else
