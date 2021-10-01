@@ -23,7 +23,6 @@ def main(event:, context:)
             return response(body: event, status: 401)
         rescue => exception
             PP.pp exception
-            PP.pp 403
             return response(body: event, status: 403)
         end
         exp = decodedToken['exp']
@@ -62,11 +61,11 @@ end
 def findToken(headers:)
     headers.keys.each { |s| 
         if s.casecmp?('authorization')
-            return headers[s].split('Bearer ')[1]
+            return headers[s].split(' ')[1]
         end
     }
-    PP.pp "Should not happen"
-    return "Blah"
+    # Should not happen
+    return "NOTATOKEN"
 end
 
 def response(body: nil, status: 200)
