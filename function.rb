@@ -25,11 +25,11 @@ def main(event:, context:)
             PP.pp exception
             return response(body: event, status: 403)
         end
-        exp = decodedToken['exp']
-        nbf = decodedToken['nbf']
-        if Time.now.to_i > exp || Time.now.to_i < nbf
-            return response(body: event, status: 401)
-        end
+        # exp = decodedToken['exp']
+        # nbf = decodedToken['nbf']
+        # if Time.now.to_i > exp || Time.now.to_i < nbf
+        #     return response(body: event, status: 401)
+        # end
         data = decodedToken['data']
         return response(body: data, status: 200)
 
